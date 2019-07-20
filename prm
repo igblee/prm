@@ -9,8 +9,14 @@ const fs = require("fs");
 program.version("packageJson.version", " -v, --version ");
 program.command("use-proxy [url]" ).action(function (value) {
   const url = value || 'http://127.0.0.1:1087'
-  shell.exec(`echo 'export http_proxy=${url}' > /Users/glenn/.bashrc`);
-  shell.exec(`echo 'export https_proxy=${url}' >>/Users/glenn/.bashrc`);
+  flag = fs.existsSync('~/.prm_bashrc')
+  if (!flag) {
+    shell.exec('touch ~/.prm_bashrc')
+  }
+  shell.exec(`echo 'source ~/.prm_bashrc' >> ~/.bashrc`)
+  shell.exec(`echo 'source ~/.prm_bashrc' >> ~/.profile_bash`)
+  shell.exec(`echo 'export http_proxy=${url}' > ~/.prm_bashrc`);
+  shell.exec(`echo 'export https_proxy=${url}' >>~/.prm_bashrc`);
   shell.exec(`npm config set proxy=${url}`);
   shell.exec(`npm config set https_proxy=${url}`);
   shell.exec("yarn config set strict-ssl false");
@@ -18,18 +24,18 @@ program.command("use-proxy [url]" ).action(function (value) {
   shell.exec(`yarn config set https-proxy ${url}`);
   shell.exec(`git config --global https.proxy ${url}`);
   shell.exec(`git config --global https.proxy ${url}`);
-  shell.exec("source /Users/glenn/.bashrc");
+  shell.exec("source ~/.prm_bashrc");
   console.log("done!");
 });
 program.command("unset-proxy").action(function () {
-  const stdout = shell.exec("echo > /Users/glenn/.bashrc");
+  const stdout = shell.exec("echo > ~/.prm_bashrc");
   shell.exec("npm config delete proxy");
   shell.exec("npm config delete https_proxy");
   shell.exec("yarn config delete proxy");
   shell.exec("yarn config delete https-proxy");
   shell.exec("git config --global --unset http.proxy");
   shell.exec("git config --global --unset https.proxy");
-  shell.exec("source /Users/glenn/.bashrc");
+  shell.exec("source ~/.prm_bashrc");
   console.log("done!");
 });
 
