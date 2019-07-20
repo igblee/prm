@@ -1,0 +1,36 @@
+#!/usr/bin/env node
+
+const program = require("commander");
+const shell = require("shelljs");
+const path = require("path");
+const packageJson = require(path.resolve(__dirname, "./package.json"));
+const fs = require("fs");
+
+program.version("packageJson.version", " -v, --version ");
+program.command("use-proxy [url]" ).action(function (value) {
+  const url = value || 'http://127.0.0.1:1087'
+  shell.exec(`echo 'export http_proxy=${url}' > /Users/glenn/.bashrc`);
+  shell.exec(`echo 'export https_proxy=${url}' >>/Users/glenn/.bashrc`);
+  shell.exec(`npm config set proxy=${url}`);
+  shell.exec(`npm config set https_proxy=${url}`);
+  shell.exec("yarn config set strict-ssl false");
+  shell.exec(`yarn config set proxy ${url}`);
+  shell.exec(`yarn config set https-proxy ${url}`);
+  shell.exec(`git config --global https.proxy ${url}`);
+  shell.exec(`git config --global https.proxy ${url}`);
+  shell.exec("source /Users/glenn/.bashrc");
+  console.log("done!");
+});
+program.command("unset-proxy").action(function () {
+  const stdout = shell.exec("echo > /Users/glenn/.bashrc");
+  shell.exec("npm config delete proxy");
+  shell.exec("npm config delete https_proxy");
+  shell.exec("yarn config delete proxy");
+  shell.exec("yarn config delete https-proxy");
+  shell.exec("git config --global --unset http.proxy");
+  shell.exec("git config --global --unset https.proxy");
+  shell.exec("source /Users/glenn/.bashrc");
+  console.log("done!");
+});
+
+program.parse(process.argv);

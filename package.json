@@ -1,0 +1,21 @@
+{
+  "name": "proxy-manage",
+  "version": "1.0.2",
+  "description": "change proxy in bash shell",
+  "main": "index.js",
+  "bin": {
+    "prm": "prm"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "proxy"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.20.0",
+    "shelljs": "^0.8.3"
+  }
+}
